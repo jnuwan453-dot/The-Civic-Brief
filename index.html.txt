@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Civic Brief | U.S. Politics</title>
+<style>
+:root{--navy:#10243a;--red:#c73c4a;--paper:#f5f3ef}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--paper);color:#172333;line-height:1.6}
+header{background:var(--navy);color:white;padding:25px 6%}
+.brand{font-family:Georgia,serif;font-size:32px;font-weight:bold}
+header p{margin:3px 0;color:#dce5ef}
+nav{background:#1b3854;padding:12px 6%;display:flex;gap:20px;flex-wrap:wrap}
+nav a{color:white;text-decoration:none}
+main{max-width:1100px;margin:auto;padding:25px 18px}
+h1,h2{font-family:Georgia,serif}
+.intro{background:white;padding:24px;border-left:5px solid var(--red);margin-bottom:24px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+input,select{padding:12px;border:1px solid #bbb;border-radius:5px;font-size:16px}
+input{flex:1;min-width:200px}
+#articles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+article{background:white;padding:20px;border-radius:8px;border-top:4px solid var(--red);box-shadow:0 3px 12px #0000000c}
+.tag{font-size:12px;text-transform:uppercase;color:#a32939;font-weight:bold}
+article h2{font-size:23px;line-height:1.25}
+button{background:var(--navy);color:white;border:0;border-radius:5px;padding:11px 15px;cursor:pointer;font-size:15px}
+button:hover{background:var(--red)}
+#story{background:white;padding:25px;border-radius:8px;margin-top:20px}
+.hidden{display:none}
+footer{background:var(--navy);color:white;text-align:center;padding:25px;margin-top:40px}
+small{color:#667}
+</style>
+</head>
+<body>
+<header>
+<div class="brand">THE CIVIC BRIEF</div>
+<p>U.S. Politics. Public Policy. Explained Clearly.</p>
+</header>
+<nav>
+<a href="#" onclick="showHome();return false">Home</a>
+<a href="#articles">Latest Briefings</a>
+<a href="#about">About</a>
+</nav>
+<main>
+<section class="intro">
+<h1>Understand the decisions shaping America.</h1>
+<p>Clear, accessible explainers on U.S. politics, elections, Congress and public policy. Explore the issues, understand the process, and follow the sources.</p>
+</section>
+<h2>Explore the Briefings</h2>
+<div class="tools">
+<input id="search" placeholder="Search articles..." oninput="render()">
+<select id="category" onchange="render()">
+<option value="All">All topics</option>
+<option>Congress</option>
+<option>Elections</option>
+<option>White House</option>
+<option>Policy</option>
+</select>
+</div>
+<div id="articles"></div>
+<section id="story" class="hidden"></section>
+<section id="about" class="intro" style="margin-top:30px">
+<h2>About The Civic Brief</h2>
+<p>The Civic Brief aims to make American government and public policy easier to understand. We value accuracy, transparency, and links to original sources.</p>
+<p><strong>Editorial note:</strong> This starter website contains sample explainers, not breaking news. Verify facts and add reliable sources and publication dates before publishing current-affairs articles.</p>
+</section>
+</main>
+<footer>
+<strong>THE CIVIC BRIEF</strong>
+<p>Independent-minded explainers for an informed public.</p>
+<small>Replace sample content with verified reporting and source links.</small>
+</footer>
+<script>
+const data=[
+{category:"Elections",title:"Primaries, Caucuses and the General Election",summary:"A simple guide to the key stages of U.S. elections.",body:"Primaries and caucuses help parties choose their nominees. In the general election, voters choose among candidates for public office. Rules and schedules vary by state. For accurate dates and rules, consult the relevant state election office and the U.S. Election Assistance Commission.",source:"https://www.eac.gov/"},
+{category:"Congress",title:"How Congressional Committees Work",summary:"Why much of Congress's detailed work happens in committees.",body:"Congressional committees examine legislation, hold hearings, gather evidence and oversee parts of the federal government. Committee membership and responsibilities differ between the House and Senate. Follow official committee websites for hearing schedules, bills and documents.",source:"https://www.congress.gov/"},
+{category:"White House",title:"What Is an Executive Order?",summary:"Understand one tool used by U.S. presidents to direct the executive branch.",body:"An executive order is a presidential directive concerning the operations of the federal government. Its legal effect depends on the authority behind it, and it remains subject to the Constitution, federal law and judicial review. Read the actual order before relying on summaries.",source:"https://www.federalregister.gov/presidential-documents/executive-orders"},
+{category:"Policy",title:"How the Federal Budget Works",summary:"A starting point for understanding federal spending and revenue.",body:"The federal budget process involves the president's budget proposal, congressional budget and appropriations work, and laws that authorize government funding. Actual spending, projected spending and proposed spending are different things. Check official budget documents for figures and dates.",source:"https://www.cbo.gov/"},
+{category:"Congress",title:"How a Bill Becomes Federal Law",summary:"The basic steps from a legislative proposal to a signed law.",body:"A bill generally must pass both the House and Senate in the same form and be presented to the president. The president may sign it or veto it, with constitutional procedures applying to each step. The process can differ depending on the bill and the circumstances.",source:"https://www.congress.gov/"},
+{category:"Elections",title:"Where to Find Official Election Information",summary:"Use authoritative sources when checking voting rules and election details.",body:"Election administration is largely handled by states and local jurisdictions. Registration deadlines, identification rules and voting methods can vary. Check your official state or local election office for current information rather than relying on old social media posts.",source:"https://www.usa.gov/voting"}
+];
+function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function render(){
+let q=document.getElementById("search").value.toLowerCase();
+let c=document.getElementById("category").value;
+let items=data.filter(a=>(c==="All"||a.category===c)&&(a.title+" "+a.summary+" "+a.category).toLowerCase().includes(q));
+document.getElementById("articles").innerHTML=items.length?items.map(a=><article><div class="tag">${esc(a.category)}</div><h2>${esc(a.title)}</h2><p>${esc(a.summary)}</p><button onclick="openStory(${data.indexOf(a)})">Read briefing →</button></article>).join(""):"<p>No matching articles found.</p>";
+}
+function openStory(i){
+let a=data[i],s=document.getElementById("story");
+s.classList.remove("hidden");
+s.innerHTML=<div class="tag">${esc(a.category)}</div><h1>${esc(a.title)}</h1><p>${esc(a.body)}</p><p><strong>Further reading:</strong> <a href="${a.source}" target="_blank" rel="noopener">Official source ↗️</a></p><button onclick="showHome()">← Back to briefings</button>;
+s.scrollIntoView({behavior:"smooth"});
+}
+function showHome(){document.getElementById("story").classList.add("hidden");document.getElementById("articles").scrollIntoView({behavior:"smooth"})}
+render();
+</script>
+</body>
+</html>
